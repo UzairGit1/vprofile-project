@@ -39,12 +39,6 @@ pipeline {
 
         }
 
-        stage('Checkstyle Analysis'){
-            steps {
-                sh 'mvn -s settings.xml -DskipTests checkstyle:checkstyle'
-            }
-        }
-
         stage('Sonar Analysis') {
             steps {
                withSonarQubeEnv("${SONARSERVER}") {
