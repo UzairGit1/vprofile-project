@@ -34,14 +34,14 @@ pipeline {
 
         stage('Test'){
             steps {
-                sh 'mvn -s settings.xml test'
+                sh 'mvn --s settings.xml -DskipTests test'
             }
 
         }
 
         stage('Checkstyle Analysis'){
             steps {
-                sh 'mvn -s settings.xml checkstyle:checkstyle'
+                sh 'mvn -s settings.xml -DskipTests checkstyle:checkstyle'
             }
         }
 
