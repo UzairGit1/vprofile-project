@@ -1,44 +1,50 @@
-pipeline{
+pipeline {
     agent any
-    tools{
+    tools {
         maven "MAVEN3"
         jdk "OracleJDK8"
     }
-    environment{
+    
+    environment {
         SNAP_REPO = 'vprofile-snapshot'
 		NEXUS_USER = 'admin'
 		NEXUS_PASS = 'admin123'
 		RELEASE_REPO = 'vprofile-release'
 		CENTRAL_REPO = 'vpro-maven-central'
-		NEXUSIP = '172.31.95.228'
+		NEXUSIP = '172.31.5.4'
 		NEXUSPORT = '8081'
 		NEXUS_GRP_REPO = 'vpro-maven-group'
         NEXUS_LOGIN = 'nexuslogin'
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
     }
-    stages{
+
+    stages {
         stage('Build'){
-            steps{
-                sh 'mvn install -s settings.xml -DskipTests'
+            steps {
+                sh 'mvn -s settings.xml -DskipTests install'
             }
-            post{
-                success{
+            post {
+                success {
                     echo "Now Archiving."
                     archiveArtifacts artifacts: '**/*.war'
                 }
             }
         }
+
         stage('Test'){
-            steps{
+            steps {
                 sh 'mvn -s settings.xml test'
             }
+
         }
+
         stage('Checkstyle Analysis'){
-            steps{
+            steps {
                 sh 'mvn -s settings.xml checkstyle:checkstyle'
             }
         }
+
         stage('Sonar Analysis') {
             environment {
                 scannerHome = tool "${SONARSCANNER}"
@@ -56,6 +62,3 @@ pipeline{
               }
             }
         }
-        }
-    }
-}
